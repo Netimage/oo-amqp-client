@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Mouf\AmqpClient\Objects;
-
 
 use Mouf\AmqpClient\Client;
 use PhpAmqpLib\Channel\AMQPChannel;
@@ -13,11 +11,17 @@ use PhpAmqpLib\Channel\AMQPChannel;
  */
 class DefaultExchange extends Exchange
 {
+	/**
+	 * @param Client $client
+	 */
     public function __construct(Client $client)
     {
-        parent::__construct($client, '', 'direct');
+        parent::__construct($client, '');
     }
 
+	/**
+	 * @param AMQPChannel $amqpChannel
+	 */
     public function init(AMQPChannel $amqpChannel)
     {
         // Let's do nothing. The default exchange already exists and cannot be overwritten.

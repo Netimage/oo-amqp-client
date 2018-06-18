@@ -12,6 +12,11 @@ use PhpAmqpLib\Channel\AMQPChannel;
  */
 class Exchange implements RabbitMqObjectInterface
 {
+	const TYPE_DIRECT = 'direct';
+	const TYPE_TOPIC = 'topic';
+	const TYPE_HEADERS = 'headers';
+	const TYPE_FANOUT = 'fanout';
+
     /**
      * @var Client
      */
@@ -90,11 +95,11 @@ class Exchange implements RabbitMqObjectInterface
     /**
      * Set the to (Binding).
      *
-     * @param Client $to
+     * @param Client $client
      * @param string $name
      * @param string $type direct, topic, headers or fanout
      */
-    public function __construct(Client $client, $name, $type)
+    public function __construct(Client $client, $name, $type = self::TYPE_DIRECT)
     {
         $this->client = $client;
         $this->client->register($this);

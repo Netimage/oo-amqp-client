@@ -50,7 +50,6 @@ class PublishCommand extends Command
     {
         $channel = $this->client->getChannel();
 
-        $filename = $input->getArgument('filename');
         if ($filename = $input->getArgument('filename')) {
             $contents = file_get_contents($filename);
         } elseif (0 === ftell(STDIN)) {

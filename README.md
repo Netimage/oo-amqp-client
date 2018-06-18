@@ -56,7 +56,7 @@ You must therefore define an `Exchange` objects to send messages.
 ```php
 use Mouf\AmqpClient\Objects\Exchange;
 
-$exchange = new Exchange($client, 'exchange_name', 'fanout');
+$exchange = new Exchange($client, 'exchange_name', Exchange::TYPE_FANOUT);
 ```
 
 When creating an exchange, you pass to the constructor the `Client` object, the exchange name, and the exchange type.
