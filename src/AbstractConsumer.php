@@ -3,6 +3,7 @@
 namespace Mouf\AmqpClient;
 
 use Mouf\Utils\Log\Psr\ErrorLogLogger;
+use PhpAmqpLib\Message\AMQPMessage;
 use Psr\Log\LoggerInterface;
 
 abstract class AbstractConsumer implements ConsumerInterface
@@ -23,7 +24,7 @@ abstract class AbstractConsumer implements ConsumerInterface
         $this->logger = $logger ?: new ErrorLogLogger();
     }
 
-    public function callback($msg)
+    public function callback(AMQPMessage $msg)
     {
         try {
             $this->onMessageReceived($msg);
@@ -47,5 +48,5 @@ abstract class AbstractConsumer implements ConsumerInterface
         }
     }
 
-    abstract public function onMessageReceived($msg);
+    abstract public function onMessageReceived(AMQPMessage $message);
 }

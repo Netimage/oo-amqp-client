@@ -2,12 +2,14 @@
 
 namespace Mouf\AmqpClient;
 
+use PhpAmqpLib\Message\AMQPMessage;
+
 interface ConsumerInterface
 {
     /**
      * Callback for the consume service call if a mesage is receive.
      */
-    public function callback($message);
+    public function callback(AMQPMessage $message);
 
     /**
      * Consumer tag to listen message
