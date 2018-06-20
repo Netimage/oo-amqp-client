@@ -6,9 +6,11 @@ use PhpAmqpLib\Message\AMQPMessage;
 
 interface ConsumerInterface
 {
-    /**
-     * Callback for the consume service call if a mesage is receive.
-     */
+	/**
+	 * Callback for the consume service call if a message is receive.
+	 *
+	 * @param AMQPMessage $message
+	 */
     public function callback(AMQPMessage $message);
 
     /**

@@ -131,10 +131,15 @@ class Queue implements RabbitMqObjectInterface, QueueInterface
      */
     private $consumers;
 
-    /**
+	/**
+	 * @var array
+	 */
+	private $arguments;
+
+	/**
      * Set the source (Binding).
      *
-     * @param Binding             $source
+     * @param Client              $client
      * @param string              $name
      * @param ConsumerInterface[] $consumers
      */
@@ -325,7 +330,7 @@ class Queue implements RabbitMqObjectInterface, QueueInterface
     /**
      * Get RabbitMq specific parameter : dead letter queue.
      *
-     * @return Queue
+     * @return Exchange
      */
     public function getDeadLetterExchanger()
     {
