@@ -83,14 +83,21 @@ class Message
      */
     private $cluster_id;
 
-    /**
-     * Message constructor.
-     *
-     * @param string $body
-     */
-    public function __construct($body)
+	/**
+	 * Message constructor.
+	 *
+	 * @param string $body
+	 * @param array  $properties
+	 */
+    public function __construct($body, array $properties = [])
     {
         $this->body = $body;
+
+        foreach ($properties as $propertyName => $propertyValue) {
+        	if (property_exists($this, $propertyName)) {
+        		$this->$$propertyName = $propertyValue;
+			}
+		}
     }
 
     /**
