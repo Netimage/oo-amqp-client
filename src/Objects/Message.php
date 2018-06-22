@@ -95,7 +95,7 @@ class Message
 
         foreach ($properties as $propertyName => $propertyValue) {
         	if (property_exists($this, $propertyName)) {
-        		$this->$$propertyName = $propertyValue;
+        		$this->$propertyName = $propertyValue;
 			}
 		}
     }
