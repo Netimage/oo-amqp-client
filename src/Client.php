@@ -81,12 +81,18 @@ class Client
      */
     private $rabbitMqObjects = [];
 
-    public function __construct($host, $port, $user, $password)
+	/**
+	 * @var string
+	 */
+	private $vhost = '/';
+
+	public function __construct($host, $port, $user, $password, $vhost = '/')
     {
         $this->host = $host;
         $this->port = ($port !== null) ? $port : 5672;
         $this->user = $user;
         $this->password = $password;
+        $this->vhost = $vhost;
     }
 
     /**
@@ -179,9 +185,9 @@ class Client
         if (!$this->connection) {
             try {
                 if (function_exists('socket_create')) {
-                    $this->connection = new AMQPSocketConnection($this->host, $this->port, $this->user, $this->password);
+                    $this->connection = new AMQPSocketConnection($this->host, $this->port, $this->user, $this->password, $this->vhost, false, 'AMQPLAIN', null, 'en_US', 0);
                 } else {
-                    $this->connection = new AMQPStreamConnection($this->host, $this->port, $this->user, $this->password);
+                    $this->connection = new AMQPStreamConnection($this->host, $this->port, $this->user, $this->password, $this->vhost);
                 }
             } catch (\ErrorException $e) {
                 /* We are trying to catch the exception when the connection if refused */
