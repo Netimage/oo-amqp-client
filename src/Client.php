@@ -4,6 +4,7 @@ namespace Mouf\AmqpClient;
 
 use PhpAmqpLib\Connection\AbstractConnection;
 use PhpAmqpLib\Connection\AMQPSocketConnection;
+use PhpAmqpLib\Connection\AMQPSSLConnection;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Channel\AMQPChannel;
 use Mouf\AmqpClient\Exception\ConnectionException;
@@ -86,14 +87,29 @@ class Client
 	 */
 	private $vhost = '/';
 
-	public function __construct($host, $port, $user, $password, $vhost = '/')
+	/**
+	 * Use a secure (https) connection to the queue?
+	 * @var bool
+	 */
+	private $secure;
+
+	/**
+	 * SSL Options
+	 * @var array
+	 */
+	private $sslOptions = [
+		'verify_peer_name' => true
+	];
+
+	public function __construct($host, $port, $user, $password, $vhost = '/', $secure = false)
     {
         $this->host = $host;
         $this->port = ($port !== null) ? $port : 5672;
         $this->user = $user;
         $this->password = $password;
         $this->vhost = $vhost;
-    }
+		$this->secure = $secure;
+	}
 
     /**
      * Get prefetch size for QOS.
@@ -184,11 +200,16 @@ class Client
     {
         if (!$this->connection) {
             try {
-                if (function_exists('socket_create')) {
-                    $this->connection = new AMQPSocketConnection($this->host, $this->port, $this->user, $this->password, $this->vhost, false, 'AMQPLAIN', null, 'en_US', 0);
-                } else {
-                    $this->connection = new AMQPStreamConnection($this->host, $this->port, $this->user, $this->password, $this->vhost);
-                }
+            	if ($this->secure) {
+            		$this->connection = new AMQPSSLConnection($this->host, $this->port, $this->user, $this->password, $this->vhost, $this->sslOptions);
+				} else {
+					if (function_exists('socket_create')) {
+						$this->connection = new AMQPSocketConnection($this->host, $this->port, $this->user, $this->password, $this->vhost, false, 'AMQPLAIN', null, 'en_US', 0);
+					}
+					else {
+						$this->connection = new AMQPStreamConnection($this->host, $this->port, $this->user, $this->password, $this->vhost);
+					}
+				}
             } catch (\ErrorException $e) {
                 /* We are trying to catch the exception when the connection if refused */
                 if (preg_match("/.*unable to connect.*Connection refused.*/", $e->__toString())) {
@@ -223,4 +244,18 @@ class Client
             return $object instanceof QueueInterface;
         });
     }
+
+	/**
+	 * @return array
+	 */
+	public function getSslOptions(): array {
+		return $this->sslOptions;
+	}
+
+	/**
+	 * @param array $sslOptions
+	 */
+	public function setSslOptions(array $sslOptions): void {
+		$this->sslOptions = $sslOptions;
+	}
 }
