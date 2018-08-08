@@ -232,6 +232,16 @@ class Client {
         return $this->channel;
     }
 
+	/**
+	 * Closes the connection
+	 * @return mixed The response from the connection close command
+	 */
+    public function closeConnection() {
+    	$return = $this->connection->close();
+    	$this->connection = null;
+    	return $return;
+	}
+
     /**
      * Returns the list of registered queues.
      *
